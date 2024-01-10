@@ -1,6 +1,7 @@
 package org.capisoft.securitybackend.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.HashSet;
@@ -19,4 +20,8 @@ public class Campus {
     private String name;
     @OneToMany(mappedBy = "campus")
     private Set<Faculty> faculties = new HashSet<>();
+
+    public void addFaculties(@NotNull Faculty faculty){
+        faculties.add(faculty);
+    }
 }
