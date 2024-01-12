@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/campus")
+@RequestMapping(value = "/faculty")
 @SecurityRequirement(name = "swagger")
 public class FacultyController {
 
@@ -20,27 +20,27 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomAPIResponse<?>> save(@Valid @RequestBody final FacultyRequest request){
+    public ResponseEntity<CustomAPIResponse<?>> save(@Valid @RequestBody final FacultyRequest request) {
         return facultyService.save(request);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> getAllByCampus(@PathVariable final Long id){
+    public ResponseEntity<CustomAPIResponse<?>> getAllByCampus(@PathVariable final Long id) {
         return facultyService.findAllByCampus(id);
     }
 
     @GetMapping(value = "/{name}")
-    public ResponseEntity<CustomAPIResponse<?>> findByName(@PathVariable final String name){
+    public ResponseEntity<CustomAPIResponse<?>> findByName(@PathVariable final String name) {
         return facultyService.findByName(name);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @RequestBody final FacultyRequest request){
+    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @RequestBody final FacultyRequest request) {
         return facultyService.update(id, request);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> delete(@PathVariable final Long id){
+    public ResponseEntity<CustomAPIResponse<?>> delete(@PathVariable final Long id) {
         return facultyService.delete(id);
     }
 
