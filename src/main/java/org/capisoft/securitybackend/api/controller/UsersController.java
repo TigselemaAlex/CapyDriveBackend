@@ -29,12 +29,12 @@ public class UsersController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> findById(Long id) {
+    public ResponseEntity<CustomAPIResponse<?>> findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> update(Long id, @RequestBody UserRequest request) {
+    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable Long id, @RequestBody UserRequest request) {
         return userService.update(id, request);
     }
 

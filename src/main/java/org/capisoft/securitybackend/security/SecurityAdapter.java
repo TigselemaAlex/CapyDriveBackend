@@ -45,7 +45,6 @@ public class SecurityAdapter {
                 .headers(headers -> {
                     headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin);
                 })
-                .cors(withDefaults())
                 .csrf(httpSecurityCsrfConfigurer -> {
                     httpSecurityCsrfConfigurer.disable();
                 })
