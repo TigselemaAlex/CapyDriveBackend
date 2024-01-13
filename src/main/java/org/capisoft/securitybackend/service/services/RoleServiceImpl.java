@@ -1,5 +1,6 @@
 package org.capisoft.securitybackend.service.services;
 
+import org.capisoft.securitybackend.api.models.requests.RoleRequest;
 import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
@@ -30,9 +31,38 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
+    public ResponseEntity<CustomAPIResponse<?>> save(RoleRequest request) {
+        Role role = RoleMapper.roleFromRoleRequest(request);
+        RoleResponse roleResponse = RoleMapper.roleResponseFromRole(roleRepository.save(role));
+        return responseBuilder.buildResponse(HttpStatus.CREATED, "Rol creado exitosamente", roleResponse);
+    }
+
+    @Override
     public ResponseEntity<CustomAPIResponse<?>> getRoles() {
         List<Role> roleList = roleRepository.findAll();
         List<RoleResponse> roleResponseList = roleList.stream().map(RoleMapper::roleResponseFromRole).toList();
         return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Roles.", roleResponseList);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> findById(Long id) {
+        Role role = roleRepository.findById(id).orElseThrow(()-> new RuntimeException("Rol no encontrado."));
+        RoleResponse roleResponse = RoleMapper.roleResponseFromRole(role);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Rol encontrado exitosamente.", roleResponse);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> update(Long id, RoleRequest request) {
+        Role roleToEdit = roleRepository.findById(id).orElseThrow(()-> new RuntimeException("Rol no encontrado."));
+        roleToEdit.setName(request.getName());
+        RoleResponse roleResponse = RoleMapper.roleResponseFromRole(roleRepository.save(roleToEdit));
+        return responseBuilder.buildResponse(HttpStatus.OK, "Rol actualizado exitosamente.", roleResponse);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> delete(Long id) {
+        Role role = roleRepository.findById(id).orElseThrow(()-> new RuntimeException("Rol no encontrado."));
+        roleRepository.delete(role);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Rol eliminado exitosamente!");
     }
 }
