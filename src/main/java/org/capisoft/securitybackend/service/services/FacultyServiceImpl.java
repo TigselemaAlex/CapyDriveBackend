@@ -6,6 +6,7 @@ import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.Campus;
 import org.capisoft.securitybackend.entities.Faculty;
+import org.capisoft.securitybackend.mappers.CampusMapper;
 import org.capisoft.securitybackend.mappers.FacultyMapper;
 import org.capisoft.securitybackend.repositories.CampusRepository;
 import org.capisoft.securitybackend.repositories.FacultyRepository;
@@ -41,6 +42,16 @@ public class FacultyServiceImpl implements IFacultyService {
         faculty.setCampus(campus);
         FacultyResponse facultyResponse = FacultyMapper.facultyResponseFromFaculty(facultyRepository.save(faculty));
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Facultad creada exitosamente!", facultyResponse);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> getFaculties() {
+        List<Faculty> facultyList = facultyRepository.findAll();
+        List<FacultyResponse> facultyResponseList = facultyList.stream().map(faculty -> {
+            Campus campus = campusRepository.findById(faculty.getCampus().getId()).orElseThrow(()-> new RuntimeException("No se encontró el campus."));
+            return FacultyMapper.facultyResponseCampusFromFaculty(faculty, CampusMapper.campusResponseFromCampus(campus));
+        }).toList();
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Facultades", facultyResponseList);
     }
 
     @Override

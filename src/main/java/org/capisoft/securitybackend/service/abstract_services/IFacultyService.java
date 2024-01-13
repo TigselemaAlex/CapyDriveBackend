@@ -8,6 +8,8 @@ public interface IFacultyService {
 
     ResponseEntity<CustomAPIResponse<?>> save (FacultyRequest request);
 
+    ResponseEntity<CustomAPIResponse<?>> getFaculties();
+
     ResponseEntity<CustomAPIResponse<?>> findAllByCampus(Long id);
 
     ResponseEntity<CustomAPIResponse<?>> update(Long id, FacultyRequest request);
