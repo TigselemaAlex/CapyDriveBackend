@@ -11,5 +11,6 @@ public class FacultyResponse {
 
     private Long id;
     private String name;
+    private CampusResponse campus;
 
 }
