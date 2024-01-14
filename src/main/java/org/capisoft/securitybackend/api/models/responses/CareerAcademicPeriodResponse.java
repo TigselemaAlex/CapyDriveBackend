@@ -8,10 +8,5 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @ToString
-public class CareerResponse {
-
-    private Long id;
-    private String name;
-    private FacultyResponse faculty;
-
+public class CareerAcademicPeriodResponse {
 }

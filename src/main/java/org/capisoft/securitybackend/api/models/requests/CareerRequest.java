@@ -10,14 +10,11 @@ import lombok.*;
 @ToString
 public class CareerRequest {
 
-    @NotNull(message = "El nombre de la Carrera es obligatorio.")
+    @NotNull(message = "El nombre de la carrera es obligatorio.")
     private String name;
 
     @NotNull(message = "El id de la facultad es obligatorio.")
     private Long faculty;
-
-    @NotNull(message = "El id del usuario es obligatorio.")
-    private Long user;
 
     @NotNull(message = "El id del período académico de la carrera es obligatorio.")
     private Long careerAcademicPeriods;
