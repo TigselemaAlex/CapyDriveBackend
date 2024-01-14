@@ -10,7 +10,7 @@ public class CareerMapper {
         return Career.builder().name(request.getName()).build();
     }
 
-    public static CareerResponse facultyResponseFromFaculty(Career career){
+    public static CareerResponse careerResponseFromCareer(Career career){
         return CareerResponse.builder()
                 .id(career.getId())
                 .name(career.getName())

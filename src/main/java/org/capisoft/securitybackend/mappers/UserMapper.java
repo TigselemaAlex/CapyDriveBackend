@@ -1,6 +1,7 @@
 package org.capisoft.securitybackend.mappers;
 
 import org.capisoft.securitybackend.api.models.requests.UserRequest;
+import org.capisoft.securitybackend.api.models.responses.CareerResponse;
 import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
 import org.capisoft.securitybackend.entities.Role;
@@ -25,6 +26,7 @@ public class UserMapper {
 
     public static UserResponse userResponseFromUser(User user) {
         List<RoleResponse> roles = user.getRoles().stream().map(RoleMapper::roleResponseFromRole).toList();
+        List<CareerResponse> careers = user.getCareers().stream().map(CareerMapper::careerResponseFromCareer).toList();
         return UserResponse.builder()
                 .id(user.getId())
                 .names(user.getNames())
@@ -33,6 +35,7 @@ public class UserMapper {
                 .dni(user.getDni())
                 .email(user.getEmail())
                 .roles(new HashSet<>(roles))
+                .careers(new HashSet<>(careers))
                 .build();
     }
 }
