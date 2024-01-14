@@ -18,5 +18,5 @@ public class UserResponse {
     private String dni;
     private String email;
     private Set<RoleResponse> roles;
-    //private Set<Career> careers;
+    private Set<CareerResponse> careers;
 }

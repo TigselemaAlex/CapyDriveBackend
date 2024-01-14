@@ -1,6 +1,7 @@
 package org.capisoft.securitybackend.api.models.requests;
 
 import lombok.*;
+import org.capisoft.securitybackend.api.models.responses.CareerResponse;
 import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 
 import java.util.Set;
@@ -19,6 +20,6 @@ public class UserRequest {
 
     private String password;
     private Set<RoleResponse> roles;
-    //private Set<Career> careers;
+    private Set<CareerResponse> careers;
 
 }
