@@ -16,7 +16,4 @@ public class CareerRequest {
     @NotNull(message = "El id de la facultad es obligatorio.")
     private Long faculty;
 
-    @NotNull(message = "El id del período académico de la carrera es obligatorio.")
-    private Long careerAcademicPeriods;
-
 }
