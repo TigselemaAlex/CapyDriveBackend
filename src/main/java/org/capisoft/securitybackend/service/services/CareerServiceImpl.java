@@ -46,9 +46,7 @@ public class CareerServiceImpl implements ICareerService {
     public ResponseEntity<CustomAPIResponse<?>> save(CareerRequest request) {
         Career career = CareerMapper.careerFromCareerRequest(request);
         Faculty faculty = facultyRepository.findById(request.getFaculty()).orElseThrow(()-> new RuntimeException("Facultad no encontrada."));
-        CareerAcademicPeriod careerAcademicPeriod = careerAcademicPeriodRepository.findById(request.getCareerAcademicPeriods()).orElseThrow(()-> new RuntimeException("Periodo Académico de la carrera no encontrado."));
         career.setFaculty(faculty);
-        career.setCareerAcademicPeriods(new HashSet<>((Collection) careerAcademicPeriod));
         CareerResponse careerResponse = CareerMapper.careerResponseFromCareer(careerRepository.save(career), FacultyMapper.facultyResponseFromFaculty(faculty));
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Carrera creada exitosamente.", careerResponse);
     }
@@ -64,12 +62,10 @@ public class CareerServiceImpl implements ICareerService {
 
     @Override
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, CareerRequest request) {
-        Career careerToEdit = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
-        Faculty faculty = facultyRepository.findById(request.getFaculty()).orElseThrow(()-> new RuntimeException("Facultad no encontrada"));
-        CareerAcademicPeriod careerAcademicPeriod = careerAcademicPeriodRepository.findById(request.getCareerAcademicPeriods()).orElseThrow(()-> new RuntimeException("Periodo Académico de la carrera no encontrado."));
+        Career careerToEdit = careerRepository.findById(id).orElseThrow(() -> new RuntimeException("Carrera no encontrada."));
+        Faculty faculty = facultyRepository.findById(request.getFaculty()).orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
         careerToEdit.setName(request.getName());
         careerToEdit.setFaculty(faculty);
-        careerToEdit.setCareerAcademicPeriods(new HashSet<>((Collection) careerAcademicPeriod));
         CareerResponse careerResponse = CareerMapper.careerResponseFromCareer(careerRepository.save(careerToEdit), FacultyMapper.facultyResponseFromFaculty(faculty));
         return responseBuilder.buildResponse(HttpStatus.OK, "Carrera actualizada exitosamente.", careerResponse);
     }
