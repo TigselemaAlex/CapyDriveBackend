@@ -30,6 +30,11 @@ public class CareerAcademicPeriodController {
         return careerAcademicPeriodService.findAll();
     }
 
+    @GetMapping(value = "by-career/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findAllByCareerId(@PathVariable final Long id){
+        return careerAcademicPeriodService.findAllByCareerId(id);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<CustomAPIResponse<?>> findById(@PathVariable final Long id){
         return careerAcademicPeriodService.findById(id);
