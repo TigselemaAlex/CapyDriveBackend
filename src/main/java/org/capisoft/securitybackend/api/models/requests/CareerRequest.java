@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class CareerRequest {
 
-    @NotNull(message = "El nombre de la Carrera es obligatorio.")
+    @NotNull(message = "El nombre de la carrera es obligatorio.")
     private String name;
 
     @NotNull(message = "El id de la facultad es obligatorio.")

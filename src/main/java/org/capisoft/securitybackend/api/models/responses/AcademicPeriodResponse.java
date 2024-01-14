@@ -2,16 +2,22 @@ package org.capisoft.securitybackend.api.models.responses;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @ToString
-public class CareerResponse {
+public class AcademicPeriodResponse {
 
     private Long id;
+
     private String name;
-    private FacultyResponse faculty;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
 }

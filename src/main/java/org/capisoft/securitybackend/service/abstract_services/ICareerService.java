@@ -8,11 +8,11 @@ public interface ICareerService {
 
     ResponseEntity<CustomAPIResponse<?>> save (CareerRequest request);
 
-    ResponseEntity<CustomAPIResponse<?>> findAllByFaculty(Long id);
+    ResponseEntity<CustomAPIResponse<?>> findAllCareers();
 
     ResponseEntity<CustomAPIResponse<?>> update(Long id, CareerRequest request);
 
-    ResponseEntity<CustomAPIResponse<?>> findByName(String name);
+    ResponseEntity<CustomAPIResponse<?>> findById(Long id);
 
     ResponseEntity<CustomAPIResponse<?>> delete(Long id);
 
