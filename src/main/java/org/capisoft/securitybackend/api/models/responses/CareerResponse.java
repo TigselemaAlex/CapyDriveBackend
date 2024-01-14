@@ -12,5 +12,6 @@ public class CareerResponse {
 
     private Long id;
     private String name;
+    private FacultyResponse faculty;
 
 }

@@ -19,29 +19,29 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PostMapping
-    public ResponseEntity<CustomAPIResponse<?>> save(@Valid @RequestBody final RoleRequest request){
-        return roleService.save(request);
-    }
+//    @PostMapping
+//    public ResponseEntity<CustomAPIResponse<?>> save(@Valid @RequestBody final RoleRequest request){
+//        return roleService.save(request);
+//    }
 
     @GetMapping
     public ResponseEntity<CustomAPIResponse<?>> getRoles() {
         return roleService.getRoles();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> findById(@PathVariable final Long id) {
-        return roleService.findById(id);
-    }
-
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @RequestBody final RoleRequest request){
-        return roleService.update(id, request);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id){
-        return roleService.delete(id);
-    }
+//    @GetMapping(value = "/{id}")
+//    public ResponseEntity<CustomAPIResponse<?>> findById(@PathVariable final Long id) {
+//        return roleService.findById(id);
+//    }
+//
+//    @PutMapping(value = "/{id}")
+//    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @RequestBody final RoleRequest request){
+//        return roleService.update(id, request);
+//    }
+//
+//    @DeleteMapping(value = "/{id}")
+//    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id){
+//        return roleService.delete(id);
+//    }
 
 }
