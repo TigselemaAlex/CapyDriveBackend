@@ -28,9 +28,9 @@ public class UsersController {
     public ResponseEntity<CustomAPIResponse<?>> login(@RequestBody LoginRequest request) {
         return userService.login(request);
     }
-    @GetMapping
-    public ResponseEntity<CustomAPIResponse<?>> findAll() {
-        return userService.findAll();
+    @GetMapping(value = "all/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findAll(@PathVariable Long id) {
+        return userService.findAll(id);
     }
 
     @GetMapping(value = "/{id}")

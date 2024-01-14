@@ -42,10 +42,17 @@ public class UserService {
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Usuario creado exitosamente!");
     }
 
-    public ResponseEntity<CustomAPIResponse<?>> findAll() {
-        List<UserResponse> response = userRepository.findAll().stream().map(UserMapper::userResponseFromUser).toList();
-
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+    public ResponseEntity<CustomAPIResponse<?>> findAll(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"))) {
+            List<UserResponse> response = userRepository.findAll().stream().map(UserMapper::userResponseFromUser).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+        } if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"))) {
+            List<UserResponse> response = userRepository.findUsersByRolesIn(new HashSet<>(List.of(Role.builder().name("SECRETARY").build()))).stream().map(UserMapper::userResponseFromUser).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+        } else{
+            return responseBuilder.buildResponse(HttpStatus.UNAUTHORIZED, "No tienes permisos para realizar esta acción.");
+        }
     }
 
     public ResponseEntity<CustomAPIResponse<?>> findById(Long id) {

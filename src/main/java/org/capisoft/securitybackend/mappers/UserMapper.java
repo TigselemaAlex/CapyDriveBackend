@@ -4,6 +4,7 @@ import org.capisoft.securitybackend.api.models.requests.UserRequest;
 import org.capisoft.securitybackend.api.models.responses.CareerResponse;
 import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
+import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.entities.Role;
 import org.capisoft.securitybackend.entities.User;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class UserMapper {
     public static User userFromUserRequest(UserRequest request) {
         List<Role> roles = request.getRoles().stream().map(RoleMapper::roleFromRoleResponse).toList();
+        List<Career> careers = request.getCareers().stream().map(CareerMapper::careerFromCareerResponse).toList();
         return User.builder()
                 .names(request.getNames())
                 .surnames(request.getSurnames())
