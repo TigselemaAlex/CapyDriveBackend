@@ -35,7 +35,7 @@ public class AcademicPeriodController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @RequestBody final AcademicPeriodRequest request){
+    public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @Valid @RequestBody final AcademicPeriodRequest request){
         return academicPeriodService.update(id, request);
     }
 
