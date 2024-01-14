@@ -2,17 +2,15 @@ package org.capisoft.securitybackend.api.models.requests;
 
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Setter
+import java.util.List;
+
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class StudentRequest {
-    private String names;
-    private String dni;
-    private String surnames;
-    private String phone;
-    private String email;
     private Long career;
-    private Long  academicPeriod;
+    private Long academicPeriod;
+    private List<StudentRequestHelper> students;
 }

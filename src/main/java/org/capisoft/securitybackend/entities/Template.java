@@ -17,7 +17,7 @@ public class Template {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "templates")
+    @ManyToMany(mappedBy = "templates", cascade = CascadeType.ALL)
     private Set<CareerAcademicPeriod> careerAcademicPeriods;
 
     @OneToMany(mappedBy = "template")
