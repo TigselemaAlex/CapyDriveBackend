@@ -24,6 +24,11 @@ public class FacultyController {
         return facultyService.save(request);
     }
 
+    @GetMapping
+    public ResponseEntity<CustomAPIResponse<?>> getFaculties() {
+        return facultyService.getFaculties();
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<CustomAPIResponse<?>> getAllByCampus(@PathVariable final Long id) {
         return facultyService.findAllByCampus(id);

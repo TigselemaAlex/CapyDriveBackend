@@ -2,7 +2,6 @@ package org.capisoft.securitybackend.api.models.requests;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.capisoft.securitybackend.entities.Campus;
 
 @Getter
 @Setter

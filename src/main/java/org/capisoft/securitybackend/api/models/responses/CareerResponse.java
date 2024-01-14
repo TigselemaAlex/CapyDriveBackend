@@ -1,4 +1,5 @@
 package org.capisoft.securitybackend.api.models.responses;
+
 import lombok.*;
 
 @Getter
@@ -7,10 +8,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @ToString
-public class FacultyResponse {
+public class CareerResponse {
 
     private Long id;
     private String name;
-    private CampusResponse campus;
 
 }
