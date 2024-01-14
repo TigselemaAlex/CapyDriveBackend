@@ -28,7 +28,15 @@ public class UserMapper {
 
     public static UserResponse userResponseFromUser(User user) {
         List<RoleResponse> roles = user.getRoles().stream().map(RoleMapper::roleResponseFromRole).toList();
-        List<CareerResponse> careers = user.getCareers().stream().map(CareerMapper::careerResponseFromCareer).toList();
+        List<CareerResponse> careers = user.getCareers().stream().map(
+                career -> {
+                    return CareerResponse.builder()
+                            .id(career.getId())
+                            .name(career.getName())
+                            .faculty(FacultyMapper.facultyResponseFromFaculty(career.getFaculty()))
+                            .build();
+                }
+        ).toList();
         return UserResponse.builder()
                 .id(user.getId())
                 .names(user.getNames())

@@ -19,4 +19,11 @@ public class CareerMapper {
                 .build();
     }
 
+    public static Career careerFromCareerResponse(CareerResponse careerResponse){
+        return Career.builder()
+                .id(careerResponse.getId())
+                .name(careerResponse.getName())
+                .build();
+    }
+
 }
