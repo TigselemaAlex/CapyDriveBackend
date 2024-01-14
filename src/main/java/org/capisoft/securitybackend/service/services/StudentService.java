@@ -3,6 +3,7 @@ package org.capisoft.securitybackend.service.services;
 import jakarta.transaction.Transactional;
 import org.capisoft.securitybackend.api.models.requests.StudentRequest;
 import org.capisoft.securitybackend.api.models.requests.StudentRequestHelper;
+import org.capisoft.securitybackend.api.models.responses.StudentResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.Career;
@@ -10,6 +11,7 @@ import org.capisoft.securitybackend.entities.CareerAcademicPeriod;
 import org.capisoft.securitybackend.entities.Student;
 import org.capisoft.securitybackend.mappers.StudentMapper;
 import org.capisoft.securitybackend.repositories.CareerAcademicPeriodRepository;
+import org.capisoft.securitybackend.repositories.CareerRepository;
 import org.capisoft.securitybackend.repositories.StudentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,13 @@ public class StudentService {
     private final CustomResponseBuilder responseBuilder;
     private final CareerAcademicPeriodRepository careerAcademicPeriodRepository;
 
-    public StudentService(StudentRepository studentRepository, CustomResponseBuilder responseBuilder, CareerAcademicPeriodRepository careerAcademicPeriodRepository) {
+    private final CareerRepository careerRepository;
+
+    public StudentService(StudentRepository studentRepository, CustomResponseBuilder responseBuilder, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CareerRepository careerRepository) {
         this.studentRepository = studentRepository;
         this.responseBuilder = responseBuilder;
         this.careerAcademicPeriodRepository = careerAcademicPeriodRepository;
+        this.careerRepository = careerRepository;
     }
 
     public ResponseEntity<CustomAPIResponse<?>> saveAll(StudentRequest requests){
@@ -59,5 +64,13 @@ public class StudentService {
         Student student = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Estudiante no encontrado."));
         studentRepository.delete(student);
         return responseBuilder.buildResponse(HttpStatus.OK, "Estudiante eliminado exitosamente!");
+    }
+
+    public ResponseEntity<CustomAPIResponse<?>> findByCareer(Long id){
+        Career career = careerRepository.findById(id).orElseThrow(() -> new RuntimeException("Carrera no encontrada."));
+        Set<CareerAcademicPeriod> careerAcademicPeriods = career.getCareerAcademicPeriods();
+        List<Student> students = studentRepository.findStudentsByCareerAcademicPeriodsIn(careerAcademicPeriods);
+        List<StudentResponse> responses = students.stream().map(StudentMapper::studentResponseFromStudent).toList();
+        return responseBuilder.buildResponse(HttpStatus.OK, "Estudiantes encontrados exitosamente!", responses);
     }
 }
