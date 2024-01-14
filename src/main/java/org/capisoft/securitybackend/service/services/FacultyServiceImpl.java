@@ -64,8 +64,10 @@ public class FacultyServiceImpl implements IFacultyService {
     @Override
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, FacultyRequest request) {
         Faculty facultyToEdit = facultyRepository.findById(id).orElseThrow(()-> new RuntimeException("Facultad no encontrada"));
+        Campus campus = campusRepository.findById(request.getCampus()).orElseThrow(()-> new RuntimeException("Campus no encontrado."));
         facultyToEdit.setName(request.getName());
-        FacultyResponse facultyResponse = FacultyMapper.facultyResponseFromFaculty(facultyRepository.save(facultyToEdit));
+        facultyToEdit.setCampus(campus);
+        FacultyResponse facultyResponse = FacultyMapper.facultyResponseCampusFromFaculty(facultyRepository.save(facultyToEdit), CampusMapper.campusResponseFromCampus(campus));
         return responseBuilder.buildResponse(HttpStatus.OK, "Facultad actualizada exitosamente!", facultyResponse);
     }
 
