@@ -1,9 +1,6 @@
 package org.capisoft.securitybackend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -22,4 +19,8 @@ public class File {
     private String url;
     private String description;
     private LocalDate issueDate;
+    @ManyToOne
+    private Student student;
+    @ManyToOne
+    private Folder folder;
 }

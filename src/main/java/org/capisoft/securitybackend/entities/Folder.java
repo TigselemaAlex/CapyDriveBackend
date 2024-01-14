@@ -3,6 +3,8 @@ package org.capisoft.securitybackend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -17,4 +19,7 @@ public class Folder {
 
     @ManyToOne
     private Template template;
+
+    @OneToMany(mappedBy = "folder")
+    private Set<File> files;
 }

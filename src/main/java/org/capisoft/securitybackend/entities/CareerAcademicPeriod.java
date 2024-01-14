@@ -21,7 +21,7 @@ public class CareerAcademicPeriod {
     @ManyToOne
     private AcademicPeriod academicPeriod;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             joinColumns = @JoinColumn(name = "career_academic_period_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
