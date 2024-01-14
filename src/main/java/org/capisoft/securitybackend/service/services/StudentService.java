@@ -54,4 +54,10 @@ public class StudentService {
         studentRepository.save(student);
         return responseBuilder.buildResponse(HttpStatus.OK, "Estudiante actualizado exitosamente!");
     }
+
+    public ResponseEntity<CustomAPIResponse<?>> delete (Long id){
+        Student student = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Estudiante no encontrado."));
+        studentRepository.delete(student);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Estudiante eliminado exitosamente!");
+    }
 }

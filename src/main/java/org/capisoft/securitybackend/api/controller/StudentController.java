@@ -28,4 +28,9 @@ public class StudentController {
     public ResponseEntity<CustomAPIResponse<?>> update (@PathVariable Long id, @RequestBody StudentRequestHelper studentRequestHelper){
         return studentService.update(studentRequestHelper, id);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> delete (@PathVariable Long id){
+        return studentService.delete(id);
+    }
 }
