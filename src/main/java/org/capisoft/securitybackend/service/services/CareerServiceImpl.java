@@ -31,7 +31,6 @@ public class CareerServiceImpl implements ICareerService {
 
     private final CareerRepository careerRepository;
     private final FacultyRepository facultyRepository;
-    private final UserRepository userRepository;
     private final CareerAcademicPeriodRepository careerAcademicPeriodRepository;
     private final CustomResponseBuilder responseBuilder;
 
@@ -39,7 +38,6 @@ public class CareerServiceImpl implements ICareerService {
     public CareerServiceImpl(CareerRepository careerRepository, FacultyRepository facultyRepository, UserRepository userRepository, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CustomResponseBuilder responseBuilder) {
         this.careerRepository = careerRepository;
         this.facultyRepository = facultyRepository;
-        this.userRepository = userRepository;
         this.careerAcademicPeriodRepository = careerAcademicPeriodRepository;
         this.responseBuilder = responseBuilder;
     }
@@ -48,10 +46,8 @@ public class CareerServiceImpl implements ICareerService {
     public ResponseEntity<CustomAPIResponse<?>> save(CareerRequest request) {
         Career career = CareerMapper.careerFromCareerRequest(request);
         Faculty faculty = facultyRepository.findById(request.getFaculty()).orElseThrow(()-> new RuntimeException("Facultad no encontrada."));
-        User user = userRepository.findById(request.getUser()).orElseThrow(()-> new RuntimeException("Usuario no encontrado."));
         CareerAcademicPeriod careerAcademicPeriod = careerAcademicPeriodRepository.findById(request.getCareerAcademicPeriods()).orElseThrow(()-> new RuntimeException("Periodo Académico de la carrera no encontrado."));
         career.setFaculty(faculty);
-        career.setUsers(new HashSet<>((Collection) user));
         career.setCareerAcademicPeriods(new HashSet<>((Collection) careerAcademicPeriod));
         CareerResponse careerResponse = CareerMapper.careerResponseFromCareer(careerRepository.save(career), FacultyMapper.facultyResponseFromFaculty(faculty));
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Carrera creada exitosamente.", careerResponse);
@@ -70,11 +66,9 @@ public class CareerServiceImpl implements ICareerService {
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, CareerRequest request) {
         Career careerToEdit = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
         Faculty faculty = facultyRepository.findById(request.getFaculty()).orElseThrow(()-> new RuntimeException("Facultad no encontrada"));
-        User user = userRepository.findById(request.getUser()).orElseThrow(()-> new RuntimeException("Usuario no encontrado."));
         CareerAcademicPeriod careerAcademicPeriod = careerAcademicPeriodRepository.findById(request.getCareerAcademicPeriods()).orElseThrow(()-> new RuntimeException("Periodo Académico de la carrera no encontrado."));
         careerToEdit.setName(request.getName());
         careerToEdit.setFaculty(faculty);
-        careerToEdit.setUsers(new HashSet<>((Collection) user));
         careerToEdit.setCareerAcademicPeriods(new HashSet<>((Collection) careerAcademicPeriod));
         CareerResponse careerResponse = CareerMapper.careerResponseFromCareer(careerRepository.save(careerToEdit), FacultyMapper.facultyResponseFromFaculty(faculty));
         return responseBuilder.buildResponse(HttpStatus.OK, "Carrera actualizada exitosamente.", careerResponse);
