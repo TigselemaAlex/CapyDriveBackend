@@ -1,19 +1,18 @@
 package org.capisoft.securitybackend.service.services;
 
 import org.capisoft.securitybackend.api.models.requests.CareerRequest;
+import org.capisoft.securitybackend.api.models.responses.AcademicPeriodResponse;
+import org.capisoft.securitybackend.api.models.responses.CareerAcademicPeriodResponse;
 import org.capisoft.securitybackend.api.models.responses.CareerResponse;
+import org.capisoft.securitybackend.api.models.responses.CareerResponseDTO;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
-import org.capisoft.securitybackend.entities.Career;
-import org.capisoft.securitybackend.entities.CareerAcademicPeriod;
-import org.capisoft.securitybackend.entities.Faculty;
-import org.capisoft.securitybackend.entities.User;
+import org.capisoft.securitybackend.entities.*;
+import org.capisoft.securitybackend.mappers.AcademicPeriodMapper;
+import org.capisoft.securitybackend.mappers.CareerAcademicPeriodMapper;
 import org.capisoft.securitybackend.mappers.CareerMapper;
 import org.capisoft.securitybackend.mappers.FacultyMapper;
-import org.capisoft.securitybackend.repositories.CareerAcademicPeriodRepository;
-import org.capisoft.securitybackend.repositories.CareerRepository;
-import org.capisoft.securitybackend.repositories.FacultyRepository;
-import org.capisoft.securitybackend.repositories.UserRepository;
+import org.capisoft.securitybackend.repositories.*;
 import org.capisoft.securitybackend.service.abstract_services.ICareerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,13 +29,15 @@ public class CareerServiceImpl implements ICareerService {
 
     private final CareerRepository careerRepository;
     private final FacultyRepository facultyRepository;
+    private final AcademicPeriodRepository academicPeriodRepository;
     private final CareerAcademicPeriodRepository careerAcademicPeriodRepository;
     private final CustomResponseBuilder responseBuilder;
 
     @Autowired
-    public CareerServiceImpl(CareerRepository careerRepository, FacultyRepository facultyRepository, UserRepository userRepository, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CustomResponseBuilder responseBuilder) {
+    public CareerServiceImpl(CareerRepository careerRepository, FacultyRepository facultyRepository, UserRepository userRepository, AcademicPeriodRepository academicPeriodRepository, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CustomResponseBuilder responseBuilder) {
         this.careerRepository = careerRepository;
         this.facultyRepository = facultyRepository;
+        this.academicPeriodRepository = academicPeriodRepository;
         this.careerAcademicPeriodRepository = careerAcademicPeriodRepository;
         this.responseBuilder = responseBuilder;
     }
@@ -58,6 +58,28 @@ public class CareerServiceImpl implements ICareerService {
             return CareerMapper.careerResponseFromCareer(career, FacultyMapper.facultyResponseFromFaculty(career.getFaculty()));
         }).toList();
         return responseBuilder.buildResponse(HttpStatus.OK, "Lista de carreras.", careerResponseList);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> findAllCareersWithAcademicPeriod() {
+        List<Career> careerList = careerRepository.findAll();
+        List<CareerAcademicPeriod> careerAcademicPeriodResponseList = careerAcademicPeriodRepository.findAll();
+        List<CareerResponseDTO> careerResponseDTOList = new ArrayList<>();
+        CareerResponseDTO careerResponseDTO = new CareerResponseDTO();
+        for (Career career: careerList) {
+            List<AcademicPeriodResponse> academicPeriodList = new ArrayList<>();
+            for (CareerAcademicPeriod careerAcademicPeriod: careerAcademicPeriodResponseList) {
+                if (career.getId().equals(careerAcademicPeriod.getCareer().getId())){
+                    academicPeriodList.add(AcademicPeriodMapper.academicPeriodResponseFromAcademicPeriod(careerAcademicPeriod.getAcademicPeriod()));
+                }
+            }
+            if(!academicPeriodList.isEmpty()){
+                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), academicPeriodList));
+            }else {
+                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), academicPeriodList));
+            }
+        }
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Carreras con sus periodos.", careerResponseDTOList);
     }
 
     @Override

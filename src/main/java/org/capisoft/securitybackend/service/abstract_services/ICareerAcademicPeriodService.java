@@ -10,6 +10,8 @@ public interface ICareerAcademicPeriodService {
 
     ResponseEntity<CustomAPIResponse<?>> findAll();
 
+    ResponseEntity<CustomAPIResponse<?>> findAllByCareerId(Long id);
+
     ResponseEntity<CustomAPIResponse<?>> update(Long id, CareerAcademicPeriodRequest request);
 
     ResponseEntity<CustomAPIResponse<?>> findById(Long id);

@@ -67,6 +67,18 @@ public class CareerAcademicPeriodServiceImpl implements ICareerAcademicPeriodSer
     }
 
     @Override
+    public ResponseEntity<CustomAPIResponse<?>> findAllByCareerId(Long id) {
+        List<CareerAcademicPeriod> careerAcademicPeriodList = careerAcademicPeriodRepository.findAllByCareer_Id(id);
+        List<CareerAcademicPeriodResponse> careerAcademicPeriodResponseList = careerAcademicPeriodList
+                .stream().map(careerAcademicPeriod -> {
+                    Career career = careerAcademicPeriod.getCareer();
+                    AcademicPeriod academicPeriod = careerAcademicPeriod.getAcademicPeriod();
+                    return CareerAcademicPeriodMapper.careerAcademicPeriodResponseFromCareerAcademicPeriod(careerAcademicPeriod, CareerMapper.careerResponseFromCareer(career), AcademicPeriodMapper.academicPeriodResponseFromAcademicPeriod(academicPeriod));
+                }).toList();
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Periodos Académicos por Carrera.", careerAcademicPeriodResponseList);
+    }
+
+    @Override
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, CareerAcademicPeriodRequest request) {
         CareerAcademicPeriod careerAcademicPeriodToEdit = careerAcademicPeriodRepository.findById(id).orElseThrow(()-> new RuntimeException("Período Académico de Carrera no encontrada."));
         Career career = careerRepository.findById(request.getCareer()).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));

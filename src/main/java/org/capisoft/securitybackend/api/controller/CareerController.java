@@ -29,6 +29,11 @@ public class CareerController {
         return careerService.findAllCareers();
     }
 
+    @GetMapping(value = "/academic-period")
+    public ResponseEntity<CustomAPIResponse<?>> findAllCareersWithAcademicPeriod(){
+        return careerService.findAllCareersWithAcademicPeriod();
+    }
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final Long id, @Valid @RequestBody final CareerRequest request){
         return careerService.update(id, request);

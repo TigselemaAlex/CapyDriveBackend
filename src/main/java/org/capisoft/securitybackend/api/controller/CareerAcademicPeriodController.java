@@ -2,7 +2,6 @@ package org.capisoft.securitybackend.api.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.capisoft.securitybackend.api.models.requests.AcademicPeriodRequest;
 import org.capisoft.securitybackend.api.models.requests.CareerAcademicPeriodRequest;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.service.abstract_services.ICareerAcademicPeriodService;
@@ -28,6 +27,11 @@ public class CareerAcademicPeriodController {
     @GetMapping
     public ResponseEntity<CustomAPIResponse<?>> getAll(){
         return careerAcademicPeriodService.findAll();
+    }
+
+    @GetMapping(value = "by-career/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findAllByCareerId(@PathVariable final Long id){
+        return careerAcademicPeriodService.findAllByCareerId(id);
     }
 
     @GetMapping(value = "/{id}")
