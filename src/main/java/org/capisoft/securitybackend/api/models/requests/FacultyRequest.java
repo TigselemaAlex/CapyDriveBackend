@@ -13,6 +13,7 @@ public class FacultyRequest {
     @NotNull(message = "El nombre de la Facultad es obligatorio.")
     private String name;
 
+    @NotNull(message = "El Campus es obligatorio.")
     private Long campus;
 
 }

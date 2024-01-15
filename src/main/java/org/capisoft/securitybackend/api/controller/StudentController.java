@@ -33,4 +33,9 @@ public class StudentController {
     public ResponseEntity<CustomAPIResponse<?>> delete (@PathVariable Long id){
         return studentService.delete(id);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findByCareer (@PathVariable Long id){
+        return studentService.findByCareer(id);
+    }
 }
