@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 public class AcademicPeriod {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
     private String name;
     private LocalDate startDate;
