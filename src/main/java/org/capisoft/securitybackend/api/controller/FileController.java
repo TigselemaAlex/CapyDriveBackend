@@ -26,9 +26,9 @@ public class FileController {
         return fileService.save( description, folder, student, file);
     }
 
-    @GetMapping(value = "/{folderId}")
-    public ResponseEntity<CustomAPIResponse<?>> findByFolder(@PathVariable final Long folderId){
-        return fileService.getFilesByFolder(folderId);
+    @GetMapping(value = "/{folderId}/{studentId}")
+    public ResponseEntity<CustomAPIResponse<?>> findByFolder(@PathVariable final Long folderId, @PathVariable final Long studentId){
+        return fileService.getFilesByFolder(folderId, studentId);
     }
 
     @GetMapping(value = "/file/{fileId}")

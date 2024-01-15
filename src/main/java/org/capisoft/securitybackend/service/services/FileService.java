@@ -74,9 +74,10 @@ public class FileService {
         }
     }
 
-    public ResponseEntity<CustomAPIResponse<?>> getFilesByFolder(Long folderId){
+    public ResponseEntity<CustomAPIResponse<?>> getFilesByFolder(Long folderId, Long studentId){
         Folder folder = folderRepository.findById(folderId).orElseThrow(() -> new RuntimeException("Folder no encontrado."));
-        List<File> files = fileRepository.findAllByFolder(folder);
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Estudiante no encontrado."));
+        List<File> files = fileRepository.findAllByFolderAndStudent(folder, student);
         List<FileResponse> responses = files.stream().map(FileMapper::fileResponseFromFile).toList();
         return responseBuilder.buildResponse(HttpStatus.OK, "Archivos encontrados", responses);
     }
