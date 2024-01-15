@@ -3,6 +3,7 @@ package org.capisoft.securitybackend.service.services;
 import jakarta.transaction.Transactional;
 import org.capisoft.securitybackend.api.models.requests.LoginRequest;
 import org.capisoft.securitybackend.api.models.requests.UserRequest;
+import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
@@ -13,10 +14,10 @@ import org.capisoft.securitybackend.mappers.CareerMapper;
 import org.capisoft.securitybackend.mappers.RoleMapper;
 import org.capisoft.securitybackend.mappers.UserMapper;
 import org.capisoft.securitybackend.repositories.CareerRepository;
+import org.capisoft.securitybackend.repositories.RoleRepository;
 import org.capisoft.securitybackend.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -30,10 +31,13 @@ public class UserService {
     private final CustomResponseBuilder responseBuilder;
     private final CareerRepository careerRepository;
 
-    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository) {
+    private final RoleRepository roleRepository;
+
+    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.responseBuilder = responseBuilder;
         this.careerRepository = careerRepository;
+        this.roleRepository = roleRepository;
     }
 
     public ResponseEntity<CustomAPIResponse<?>> login(LoginRequest request) {
@@ -62,6 +66,18 @@ public class UserService {
         } else{
             return responseBuilder.buildResponse(HttpStatus.UNAUTHORIZED, "No tienes permisos para realizar esta acción.");
         }
+    }
+
+    public ResponseEntity<CustomAPIResponse<?>> findRolesByUserId(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals("SUPER-ADMIN"))) {
+            List<RoleResponse> response = roleRepository.findAll().stream().map(RoleMapper::roleResponseFromRole).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de roles SUPER-ADMIN.", response);
+        } else if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"))) {
+            List<RoleResponse> response = roleRepository.findById(3L).stream().map(RoleMapper::roleResponseFromRole).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de roles ADMIN.", response);
+        }
+        return responseBuilder.buildResponse(HttpStatus.UNAUTHORIZED, "No tienes permisos para realizar esta acción.");
     }
 
     public ResponseEntity<CustomAPIResponse<?>> findById(Long id) {

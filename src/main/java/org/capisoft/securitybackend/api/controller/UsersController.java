@@ -38,6 +38,11 @@ public class UsersController {
         return userService.findById(id);
     }
 
+    @GetMapping(value = "role/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findRolesByUserId(@PathVariable Long id) {
+        return userService.findRolesByUserId(id);
+    }
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable Long id, @RequestBody UserRequest request) {
         return userService.update(id, request);
