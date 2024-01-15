@@ -44,7 +44,7 @@ public class UsersController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CustomAPIResponse<?>> delete(Long id) {
+    public ResponseEntity<CustomAPIResponse<?>> delete(@PathVariable Long id) {
         return userService.delete(id);
     }
 }
