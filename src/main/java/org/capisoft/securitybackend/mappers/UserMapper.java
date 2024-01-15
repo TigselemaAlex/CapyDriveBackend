@@ -23,6 +23,7 @@ public class UserMapper {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .roles(new HashSet<>(roles))
+                .careers(new HashSet<>(careers))
                 .build();
     }
 

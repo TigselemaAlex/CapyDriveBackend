@@ -7,10 +7,13 @@ import org.capisoft.securitybackend.api.models.responses.RoleResponse;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
+import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.entities.Role;
 import org.capisoft.securitybackend.entities.User;
+import org.capisoft.securitybackend.mappers.CareerMapper;
 import org.capisoft.securitybackend.mappers.RoleMapper;
 import org.capisoft.securitybackend.mappers.UserMapper;
+import org.capisoft.securitybackend.repositories.CareerRepository;
 import org.capisoft.securitybackend.repositories.RoleRepository;
 import org.capisoft.securitybackend.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -25,14 +28,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    
-    private final RoleRepository roleRepository;
     private final CustomResponseBuilder responseBuilder;
+    private final CareerRepository careerRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, CustomResponseBuilder responseBuilder) {
+    private final RoleRepository roleRepository;
+
+    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.responseBuilder = responseBuilder;
+        this.careerRepository = careerRepository;
+        this.roleRepository = roleRepository;
     }
 
     public ResponseEntity<CustomAPIResponse<?>> login(LoginRequest request) {
@@ -42,6 +47,10 @@ public class UserService {
 
     public ResponseEntity<CustomAPIResponse<?>> save(UserRequest userRequest) {
         User user = UserMapper.userFromUserRequest(userRequest);
+        userRequest.getCareers().forEach(careerId -> {
+            Career career = careerRepository.findById(careerId.getId()).orElseThrow(() -> new RuntimeException("Carrera no encontrada."));
+            career.getUsers().add(user);
+        });
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Usuario creado exitosamente!");
     }
@@ -78,6 +87,7 @@ public class UserService {
 
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, UserRequest userRequest) {
         List<Role> roles = userRequest.getRoles().stream().map(RoleMapper::roleFromRoleResponse).toList();
+        List<Career> careers = userRequest.getCareers().stream().map(CareerMapper::careerFromCareerResponse).toList();
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
         user.setNames(userRequest.getNames());
         user.setSurnames(userRequest.getSurnames());
@@ -86,6 +96,7 @@ public class UserService {
         user.setEmail(userRequest.getEmail());
         user.setPassword(userRequest.getPassword());
         user.setRoles(new HashSet<>(roles));
+        user.setCareers(new HashSet<>(careers));
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.OK, "Usuario actualizado exitosamente!");
     }
