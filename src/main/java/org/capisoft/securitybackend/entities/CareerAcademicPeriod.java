@@ -28,7 +28,7 @@ public class CareerAcademicPeriod {
     )
     private Set<Student> students;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             joinColumns = @JoinColumn(name = "career_academic_period_id"),
             inverseJoinColumns = @JoinColumn(name = "template_id")

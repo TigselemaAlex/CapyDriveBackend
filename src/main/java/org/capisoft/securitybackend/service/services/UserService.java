@@ -9,6 +9,7 @@ import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.entities.Role;
 import org.capisoft.securitybackend.entities.User;
+import org.capisoft.securitybackend.mappers.CareerMapper;
 import org.capisoft.securitybackend.mappers.RoleMapper;
 import org.capisoft.securitybackend.mappers.UserMapper;
 import org.capisoft.securitybackend.repositories.CareerRepository;
@@ -70,6 +71,7 @@ public class UserService {
 
     public ResponseEntity<CustomAPIResponse<?>> update(Long id, UserRequest userRequest) {
         List<Role> roles = userRequest.getRoles().stream().map(RoleMapper::roleFromRoleResponse).toList();
+        List<Career> careers = userRequest.getCareers().stream().map(CareerMapper::careerFromCareerResponse).toList();
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
         user.setNames(userRequest.getNames());
         user.setSurnames(userRequest.getSurnames());
@@ -78,6 +80,7 @@ public class UserService {
         user.setEmail(userRequest.getEmail());
         user.setPassword(userRequest.getPassword());
         user.setRoles(new HashSet<>(roles));
+        user.setCareers(new HashSet<>(careers));
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.OK, "Usuario actualizado exitosamente!");
     }

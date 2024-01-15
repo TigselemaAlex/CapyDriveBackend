@@ -17,6 +17,7 @@ public class TemplateMapper {
                 .id(template.getId())
                 .name(template.getName())
                 .createdAt(template.getCreatedAt())
+                .folders(template.getFolders().stream().map(FolderMapper::folderResponseFromFolder).toList())
                 .build();
     }
 }

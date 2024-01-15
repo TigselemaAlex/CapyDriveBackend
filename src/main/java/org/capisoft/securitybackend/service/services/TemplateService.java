@@ -8,10 +8,12 @@ import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.entities.CareerAcademicPeriod;
+import org.capisoft.securitybackend.entities.Folder;
 import org.capisoft.securitybackend.entities.Template;
 import org.capisoft.securitybackend.mappers.TemplateMapper;
 import org.capisoft.securitybackend.repositories.CareerAcademicPeriodRepository;
 import org.capisoft.securitybackend.repositories.CareerRepository;
+import org.capisoft.securitybackend.repositories.FolderRepository;
 import org.capisoft.securitybackend.repositories.TemplateRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +30,14 @@ public class TemplateService {
     private final CareerAcademicPeriodRepository careerAcademicPeriodRepository;
 
     private final CareerRepository careerRepository;
+    private final FolderRepository folderRepository;
 
     private final CustomResponseBuilder responseBuilder;
-    public TemplateService(TemplateRepository templateRepository, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CareerRepository careerRepository, CustomResponseBuilder responseBuilder) {
+    public TemplateService(TemplateRepository templateRepository, CareerAcademicPeriodRepository careerAcademicPeriodRepository, CareerRepository careerRepository, FolderRepository folderRepository, CustomResponseBuilder responseBuilder) {
         this.templateRepository = templateRepository;
         this.careerAcademicPeriodRepository = careerAcademicPeriodRepository;
         this.careerRepository = careerRepository;
+        this.folderRepository = folderRepository;
         this.responseBuilder = responseBuilder;
     }
 
@@ -45,7 +49,14 @@ public class TemplateService {
 
         Template template = TemplateMapper.templateFormTemplateRequest(request);
         template.setCareerAcademicPeriods(new HashSet<>(List.of(careerAcademicPeriod)));
-        careerAcademicPeriod.setTemplates(new HashSet<>(List.of(template)));
+        careerAcademicPeriod.getTemplates().add(template);
+        template.setFolders(new HashSet<>());
+        request.getFolders().forEach(folder -> {
+            Folder folder_ = new Folder();
+            folder_.setName(folder.getName());
+            folder_.setTemplate(template);
+            template.getFolders().add(folderRepository.save(folder_));
+        });
         templateRepository.save(template);
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Template creado exitosamente!");
 

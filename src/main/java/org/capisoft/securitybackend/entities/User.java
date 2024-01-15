@@ -32,7 +32,11 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "career_id")
+    )
     private Set<Career> careers = new HashSet<>();
 
 }

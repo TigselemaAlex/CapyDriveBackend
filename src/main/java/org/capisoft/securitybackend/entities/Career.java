@@ -20,11 +20,7 @@ public class Career {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Faculty faculty;
-    @ManyToMany
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "career_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "careers")
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "career")
