@@ -2,21 +2,16 @@ package org.capisoft.securitybackend.api.models.responses;
 
 import lombok.*;
 
-import java.util.Set;
-
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
-public class UserResponse {
-
+public class StudentResponse {
     private Long id;
     private String names;
+    private String dni;
     private String surnames;
     private String phone;
-    private String dni;
     private String email;
-    private Set<RoleResponse> roles;
-    private Set<CareerResponse> careers;
 }

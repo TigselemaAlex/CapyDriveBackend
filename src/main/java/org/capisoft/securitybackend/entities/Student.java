@@ -23,4 +23,7 @@ public class Student {
 
     @ManyToMany(mappedBy = "students")
     private Set<CareerAcademicPeriod> careerAcademicPeriods;
+
+    @OneToMany(mappedBy = "student")
+    private Set<File> files;
 }

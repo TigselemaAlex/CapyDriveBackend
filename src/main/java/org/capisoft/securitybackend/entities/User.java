@@ -20,7 +20,9 @@ public class User {
     private String names;
     private String surnames;
     private String phone;
+    @Column(unique = true)
     private String dni;
+    @Column(unique = true)
     private String email;
     private String password;
     @ManyToMany

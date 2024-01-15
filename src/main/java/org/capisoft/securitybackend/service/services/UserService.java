@@ -1,6 +1,7 @@
 package org.capisoft.securitybackend.service.services;
 
 import jakarta.transaction.Transactional;
+import org.capisoft.securitybackend.api.models.requests.LoginRequest;
 import org.capisoft.securitybackend.api.models.requests.UserRequest;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
@@ -24,25 +25,34 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CustomResponseBuilder responseBuilder;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder) {
         this.userRepository = userRepository;
         this.responseBuilder = responseBuilder;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    public ResponseEntity<CustomAPIResponse<?>> login(LoginRequest request) {
+        User user = userRepository.findUserByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        return responseBuilder.buildResponse(HttpStatus.OK, "Usuario encontrado.", UserMapper.userResponseFromUser(user));
     }
 
     public ResponseEntity<CustomAPIResponse<?>> save(UserRequest userRequest) {
         User user = UserMapper.userFromUserRequest(userRequest);
-        user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Usuario creado exitosamente!");
     }
 
-    public ResponseEntity<CustomAPIResponse<?>> findAll() {
-        List<UserResponse> response = userRepository.findAll().stream().map(UserMapper::userResponseFromUser).toList();
-
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+    public ResponseEntity<CustomAPIResponse<?>> findAll(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals("SUPER-ADMIN"))) {
+            List<UserResponse> response = userRepository.findAll().stream().map(UserMapper::userResponseFromUser).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+        } if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"))) {
+            List<UserResponse> response = userRepository.findUsersByRolesName("SECRETARY").stream().map(UserMapper::userResponseFromUser).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de usuarios.", response);
+        } else{
+            return responseBuilder.buildResponse(HttpStatus.UNAUTHORIZED, "No tienes permisos para realizar esta acción.");
+        }
     }
 
     public ResponseEntity<CustomAPIResponse<?>> findById(Long id) {
@@ -58,7 +68,7 @@ public class UserService {
         user.setPhone(userRequest.getPhone());
         user.setDni(userRequest.getDni());
         user.setEmail(userRequest.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
+        user.setPassword(userRequest.getPassword());
         user.setRoles(new HashSet<>(roles));
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.OK, "Usuario actualizado exitosamente!");

@@ -1,6 +1,7 @@
 package org.capisoft.securitybackend.api.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.capisoft.securitybackend.api.models.requests.LoginRequest;
 import org.capisoft.securitybackend.api.models.requests.UserRequest;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.service.services.UserService;
@@ -23,9 +24,13 @@ public class UsersController {
         return userService.save(request);
     }
 
-    @GetMapping
-    public ResponseEntity<CustomAPIResponse<?>> findAll() {
-        return userService.findAll();
+    @PostMapping(value = "/login")
+    public ResponseEntity<CustomAPIResponse<?>> login(@RequestBody LoginRequest request) {
+        return userService.login(request);
+    }
+    @GetMapping(value = "all/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findAll(@PathVariable Long id) {
+        return userService.findAll(id);
     }
 
     @GetMapping(value = "/{id}")
