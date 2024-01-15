@@ -6,10 +6,12 @@ import org.capisoft.securitybackend.api.models.requests.UserRequest;
 import org.capisoft.securitybackend.api.models.responses.UserResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
+import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.entities.Role;
 import org.capisoft.securitybackend.entities.User;
 import org.capisoft.securitybackend.mappers.RoleMapper;
 import org.capisoft.securitybackend.mappers.UserMapper;
+import org.capisoft.securitybackend.repositories.CareerRepository;
 import org.capisoft.securitybackend.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CustomResponseBuilder responseBuilder;
+    private final CareerRepository careerRepository;
 
-    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder) {
+    public UserService(UserRepository userRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository) {
         this.userRepository = userRepository;
         this.responseBuilder = responseBuilder;
+        this.careerRepository = careerRepository;
     }
 
     public ResponseEntity<CustomAPIResponse<?>> login(LoginRequest request) {
@@ -38,6 +42,10 @@ public class UserService {
 
     public ResponseEntity<CustomAPIResponse<?>> save(UserRequest userRequest) {
         User user = UserMapper.userFromUserRequest(userRequest);
+        userRequest.getCareers().forEach(careerId -> {
+            Career career = careerRepository.findById(careerId.getId()).orElseThrow(() -> new RuntimeException("Carrera no encontrada."));
+            career.getUsers().add(user);
+        });
         userRepository.save(user);
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Usuario creado exitosamente!");
     }
