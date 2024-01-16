@@ -1,7 +1,9 @@
 package org.capisoft.securitybackend.service.services;
 
 import org.capisoft.securitybackend.api.models.requests.CareerAcademicPeriodRequest;
+import org.capisoft.securitybackend.api.models.responses.AcademicPeriodResponse;
 import org.capisoft.securitybackend.api.models.responses.CareerAcademicPeriodResponse;
+import org.capisoft.securitybackend.api.models.responses.CareerResponseDTO;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.AcademicPeriod;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,14 +71,15 @@ public class CareerAcademicPeriodServiceImpl implements ICareerAcademicPeriodSer
 
     @Override
     public ResponseEntity<CustomAPIResponse<?>> findAllByCareerId(Long id) {
+        Career career = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
         List<CareerAcademicPeriod> careerAcademicPeriodList = careerAcademicPeriodRepository.findAllByCareer_Id(id);
-        List<CareerAcademicPeriodResponse> careerAcademicPeriodResponseList = careerAcademicPeriodList
-                .stream().map(careerAcademicPeriod -> {
-                    Career career = careerAcademicPeriod.getCareer();
-                    AcademicPeriod academicPeriod = careerAcademicPeriod.getAcademicPeriod();
-                    return CareerAcademicPeriodMapper.careerAcademicPeriodResponseFromCareerAcademicPeriod(careerAcademicPeriod, CareerMapper.careerResponseFromCareer(career), AcademicPeriodMapper.academicPeriodResponseFromAcademicPeriod(academicPeriod));
-                }).toList();
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Periodos Académicos por Carrera.", careerAcademicPeriodResponseList);
+        List<AcademicPeriod> academicPeriodList = new ArrayList<>();
+        for (CareerAcademicPeriod careerAcademicPeriod: careerAcademicPeriodList) {
+            academicPeriodList.add(careerAcademicPeriod.getAcademicPeriod());
+        }
+        List<AcademicPeriodResponse>academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+        CareerResponseDTO careerResponseDTO = CareerMapper.careerResponseDTOFromCareer(career, academicPeriodResponseList);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Periodos Académicos por Carrera.", careerResponseDTO);
     }
 
     @Override
