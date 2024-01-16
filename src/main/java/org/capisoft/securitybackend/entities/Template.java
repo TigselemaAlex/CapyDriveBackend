@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,5 +29,5 @@ public class Template {
     private Set<CareerAcademicPeriod> careerAcademicPeriods;
 
     @OneToMany(mappedBy = "template")
-    private Set<Folder> folders;
+    private Set<Folder> folders = new HashSet<>();
 }

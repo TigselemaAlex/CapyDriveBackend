@@ -2,7 +2,9 @@ package org.capisoft.securitybackend.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
@@ -18,7 +20,9 @@ public class File {
     private String name;
     private String url;
     private String description;
-    private LocalDate issueDate;
+
+    @CreationTimestamp
+    private Instant issueDate;
     @ManyToOne
     private Student student;
     @ManyToOne

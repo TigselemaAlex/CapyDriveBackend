@@ -26,4 +26,9 @@ public class TemplateController {
         return templateService.findByCareer(id);
     }
 
+    @GetMapping("/student/{id}")
+    public ResponseEntity<CustomAPIResponse<?>> findByStudent(@PathVariable Long id){
+        return templateService.findByStudentId(id);
+    }
+
 }

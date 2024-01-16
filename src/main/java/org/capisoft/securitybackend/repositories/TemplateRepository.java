@@ -10,4 +10,5 @@ import java.util.Set;
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     List<Template> findAllByCareerAcademicPeriodsIn(Set<CareerAcademicPeriod> careerAcademicPeriods);
+
 }
