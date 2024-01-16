@@ -66,6 +66,7 @@ public class FileService {
 
             // Guarda el archivo localmente
             file.transferTo(new java.io.File(filePath));
+            file_.setName(fileName);
             file_.setUrl(filePath);
             fileRepository.save(file_);
             return responseBuilder.buildResponse(HttpStatus.CREATED, "Archivo creado exitosamente!");
@@ -74,9 +75,10 @@ public class FileService {
         }
     }
 
-    public ResponseEntity<CustomAPIResponse<?>> getFilesByFolder(Long folderId){
+    public ResponseEntity<CustomAPIResponse<?>> getFilesByFolder(Long folderId, Long studentId){
         Folder folder = folderRepository.findById(folderId).orElseThrow(() -> new RuntimeException("Folder no encontrado."));
-        List<File> files = fileRepository.findAllByFolder(folder);
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Estudiante no encontrado."));
+        List<File> files = fileRepository.findAllByFolderAndStudent(folder, student);
         List<FileResponse> responses = files.stream().map(FileMapper::fileResponseFromFile).toList();
         return responseBuilder.buildResponse(HttpStatus.OK, "Archivos encontrados", responses);
     }
