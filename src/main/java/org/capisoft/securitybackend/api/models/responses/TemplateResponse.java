@@ -17,6 +17,7 @@ public class TemplateResponse {
     private String name;
     private Instant createdAt;
     private List<FolderResponse> folders;
+    private List<AcademicPeriodResponse> academicPeriods;
 
     @AllArgsConstructor
     @NoArgsConstructor
