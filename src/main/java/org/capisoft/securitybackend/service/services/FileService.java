@@ -66,6 +66,7 @@ public class FileService {
 
             // Guarda el archivo localmente
             file.transferTo(new java.io.File(filePath));
+            file_.setName(fileName);
             file_.setUrl(filePath);
             fileRepository.save(file_);
             return responseBuilder.buildResponse(HttpStatus.CREATED, "Archivo creado exitosamente!");
