@@ -61,7 +61,7 @@ public class FileService {
 
         try {
             // Obtén el nombre original del archivo
-            String fileName = student_.getDni() + Instant.now().toString().replaceAll(":","-") +".pdf";
+            String fileName = file.getOriginalFilename().replaceAll(".pdf", "") + Instant.now().toString().replaceAll(":","-") +".pdf";
 
             // Construye la ruta completa del archivo dentro de la carpeta "uploads"
             String filePath = uploadDir + java.io.File.separator + fileName;
