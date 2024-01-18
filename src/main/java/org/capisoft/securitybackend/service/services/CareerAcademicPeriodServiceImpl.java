@@ -12,6 +12,7 @@ import org.capisoft.securitybackend.entities.CareerAcademicPeriod;
 import org.capisoft.securitybackend.mappers.AcademicPeriodMapper;
 import org.capisoft.securitybackend.mappers.CareerAcademicPeriodMapper;
 import org.capisoft.securitybackend.mappers.CareerMapper;
+import org.capisoft.securitybackend.mappers.FacultyMapper;
 import org.capisoft.securitybackend.repositories.AcademicPeriodRepository;
 import org.capisoft.securitybackend.repositories.CareerAcademicPeriodRepository;
 import org.capisoft.securitybackend.repositories.CareerRepository;
@@ -78,7 +79,7 @@ public class CareerAcademicPeriodServiceImpl implements ICareerAcademicPeriodSer
             academicPeriodList.add(careerAcademicPeriod.getAcademicPeriod());
         }
         List<AcademicPeriodResponse>academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
-        CareerResponseDTO careerResponseDTO = CareerMapper.careerResponseDTOFromCareer(career, academicPeriodResponseList);
+        CareerResponseDTO careerResponseDTO = CareerMapper.careerResponseDTOFromCareer(career, academicPeriodResponseList, FacultyMapper.facultyResponseFromFaculty(career.getFaculty()));
         return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Periodos Académicos por Carrera.", careerResponseDTO);
     }
 

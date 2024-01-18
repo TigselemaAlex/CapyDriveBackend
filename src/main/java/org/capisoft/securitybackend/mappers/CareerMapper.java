@@ -37,11 +37,12 @@ public class CareerMapper {
                 .build();
     }
 
-    public static CareerResponseDTO careerResponseDTOFromCareer(Career career, List<AcademicPeriodResponse> responseList){
+    public static CareerResponseDTO careerResponseDTOFromCareer(Career career, List<AcademicPeriodResponse> responseList, FacultyResponse faculty){
         return CareerResponseDTO.builder()
                 .id(career.getId())
                 .name(career.getName())
                 .academicPeriods(responseList)
+                .faculty(faculty)
                 .build();
     }
 

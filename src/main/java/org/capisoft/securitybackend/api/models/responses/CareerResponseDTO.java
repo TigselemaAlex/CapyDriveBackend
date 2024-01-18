@@ -14,6 +14,7 @@ public class CareerResponseDTO {
 
     private Long id;
     private String name;
+    private FacultyResponse faculty;
     private List<AcademicPeriodResponse> academicPeriods;
 
 }
