@@ -22,6 +22,8 @@ public class TemplateMapper {
                             return AcademicPeriodResponse.builder()
                                     .id(careerAcademicPeriod.getAcademicPeriod().getId())
                                     .name(careerAcademicPeriod.getAcademicPeriod().getName())
+                                    .endDate(careerAcademicPeriod.getAcademicPeriod().getEndDate())
+                                    .startDate(careerAcademicPeriod.getAcademicPeriod().getStartDate())
                                     .build();
                         }
                 ).toList();
