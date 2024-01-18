@@ -1,10 +1,7 @@
 package org.capisoft.securitybackend.service.services;
 
 import org.capisoft.securitybackend.api.models.requests.CareerRequest;
-import org.capisoft.securitybackend.api.models.responses.AcademicPeriodResponse;
-import org.capisoft.securitybackend.api.models.responses.CareerAcademicPeriodResponse;
-import org.capisoft.securitybackend.api.models.responses.CareerResponse;
-import org.capisoft.securitybackend.api.models.responses.CareerResponseDTO;
+import org.capisoft.securitybackend.api.models.responses.*;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.*;
@@ -65,7 +62,6 @@ public class CareerServiceImpl implements ICareerService {
         List<Career> careerList = careerRepository.findAll();
         List<CareerAcademicPeriod> careerAcademicPeriodResponseList = careerAcademicPeriodRepository.findAll();
         List<CareerResponseDTO> careerResponseDTOList = new ArrayList<>();
-        CareerResponseDTO careerResponseDTO = new CareerResponseDTO();
         for (Career career: careerList) {
             List<AcademicPeriodResponse> academicPeriodList = new ArrayList<>();
             for (CareerAcademicPeriod careerAcademicPeriod: careerAcademicPeriodResponseList) {
@@ -74,9 +70,9 @@ public class CareerServiceImpl implements ICareerService {
                 }
             }
             if(!academicPeriodList.isEmpty()){
-                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), academicPeriodList));
+                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), FacultyMapper.facultyResponseFromFaculty(career.getFaculty()), academicPeriodList));
             }else {
-                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), academicPeriodList));
+                careerResponseDTOList.add(new CareerResponseDTO(career.getId(), career.getName(), FacultyMapper.facultyResponseFromFaculty(career.getFaculty()), academicPeriodList));
             }
         }
         return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Carreras con sus periodos.", careerResponseDTOList);
