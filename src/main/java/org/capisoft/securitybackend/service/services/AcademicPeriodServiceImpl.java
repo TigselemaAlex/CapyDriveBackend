@@ -79,23 +79,36 @@ public class AcademicPeriodServiceImpl implements IAcademicPeriodService {
     @Override
     public ResponseEntity<CustomAPIResponse<?>> getAllByCareer(Long id) {
         Career career = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
-        List<AcademicPeriod> academicPeriodList =
-                academicPeriodRepository.findAllByIdNotIn(career.getCareerAcademicPeriods().stream().map(
-                        careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
-                ).toList());
-        List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        if(career.getCareerAcademicPeriods().isEmpty()){
+            List<AcademicPeriod> academicPeriodList = academicPeriodRepository.findAll();
+            List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        }else{
+            List<AcademicPeriod> academicPeriodList =
+                    academicPeriodRepository.findAllByIdNotIn(career.getCareerAcademicPeriods().stream().map(
+                            careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
+                    ).toList());
+            List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        }
     }
 
     @Override
     public ResponseEntity<CustomAPIResponse<?>> getAllByStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(()-> new RuntimeException("Estudiante no encontrado."));
-        List<AcademicPeriod> academicPeriodList =
-                academicPeriodRepository.findAllByIdNotIn(student.getCareerAcademicPeriods().stream().map(
-                        careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
-                ).toList());
-        List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        if (student.getCareerAcademicPeriods().isEmpty()){
+            List<AcademicPeriod> academicPeriodList = academicPeriodRepository.findAll();
+            List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        }else{
+            List<AcademicPeriod> academicPeriodList =
+                    academicPeriodRepository.findAllByIdNotIn(student.getCareerAcademicPeriods().stream().map(
+                            careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
+                    ).toList());
+            List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+            return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+        }
+
     }
 
 }
