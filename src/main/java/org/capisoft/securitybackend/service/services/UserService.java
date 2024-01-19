@@ -94,7 +94,6 @@ public class UserService {
         user.setPhone(userRequest.getPhone());
         user.setDni(userRequest.getDni());
         user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
         user.setRoles(new HashSet<>(roles));
         user.setCareers(new HashSet<>(careers));
         userRepository.save(user);
