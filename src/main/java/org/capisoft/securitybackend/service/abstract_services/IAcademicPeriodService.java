@@ -17,5 +17,6 @@ public interface IAcademicPeriodService {
     ResponseEntity<CustomAPIResponse<?>> findById(Long id);
 
     ResponseEntity<CustomAPIResponse<?>> delete(Long id);
+    public ResponseEntity<CustomAPIResponse<?>> getAllByCareer(Long id);
 
 }

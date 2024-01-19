@@ -5,8 +5,10 @@ import org.capisoft.securitybackend.api.models.responses.AcademicPeriodResponse;
 import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.AcademicPeriod;
+import org.capisoft.securitybackend.entities.Career;
 import org.capisoft.securitybackend.mappers.AcademicPeriodMapper;
 import org.capisoft.securitybackend.repositories.AcademicPeriodRepository;
+import org.capisoft.securitybackend.repositories.CareerRepository;
 import org.capisoft.securitybackend.service.abstract_services.IAcademicPeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ public class AcademicPeriodServiceImpl implements IAcademicPeriodService {
     private final AcademicPeriodRepository academicPeriodRepository;
 
     private final CustomResponseBuilder responseBuilder;
+    private final CareerRepository careerRepository;
 
     @Autowired
-    public AcademicPeriodServiceImpl(AcademicPeriodRepository academicPeriodRepository, CustomResponseBuilder responseBuilder) {
+    public AcademicPeriodServiceImpl(AcademicPeriodRepository academicPeriodRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository) {
         this.academicPeriodRepository = academicPeriodRepository;
         this.responseBuilder = responseBuilder;
+        this.careerRepository = careerRepository;
     }
 
     @Override
@@ -67,4 +71,16 @@ public class AcademicPeriodServiceImpl implements IAcademicPeriodService {
         academicPeriodRepository.delete(academicPeriod);
         return responseBuilder.buildResponse(HttpStatus.OK, "Periodo académico eliminado exitosamente.");
     }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> getAllByCareer(Long id) {
+        Career career = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
+        List<AcademicPeriod> academicPeriodList =
+                academicPeriodRepository.findAllByIdNotIn(career.getCareerAcademicPeriods().stream().map(
+                        careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
+                ).toList());
+        List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+    }
+
 }
