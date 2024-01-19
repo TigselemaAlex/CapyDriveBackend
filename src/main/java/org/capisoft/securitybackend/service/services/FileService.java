@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -59,10 +61,10 @@ public class FileService {
 
         try {
             // Obtén el nombre original del archivo
-            String fileName = student_.getDni() + LocalDate.now().toString();
+            String fileName = file.getOriginalFilename().replaceAll(".pdf", "") + Instant.now().toString().replaceAll(":","-") +".pdf";
 
             // Construye la ruta completa del archivo dentro de la carpeta "uploads"
-            String filePath = uploadDir + java.io.File.separator + fileName + ".pdf";
+            String filePath = uploadDir + java.io.File.separator + fileName;
 
             // Guarda el archivo localmente
             file.transferTo(new java.io.File(filePath));
@@ -71,7 +73,7 @@ public class FileService {
             fileRepository.save(file_);
             return responseBuilder.buildResponse(HttpStatus.CREATED, "Archivo creado exitosamente!");
         } catch (IOException e) {
-            return responseBuilder.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar el archivo");
+            return responseBuilder.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar el archivo " + e.getMessage());
         }
     }
 
@@ -100,6 +102,12 @@ public class FileService {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(data);
+    }
+
+    public ResponseEntity<CustomAPIResponse<?>> deleteFile(Long id){
+        File file = fileRepository.findById(id).orElseThrow(() -> new RuntimeException("Archivo no encontrado."));
+        fileRepository.delete(file);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Archivo eliminado exitosamente!");
     }
 
 

@@ -24,13 +24,25 @@ public class CareerMapper {
     }
 
     public static CareerResponse careerResponseFromCareer(Career career){
+        List<AcademicPeriodResponse> responseList = career.getCareerAcademicPeriods().stream().map(
+                careerAcademicPeriod -> {
+                    return AcademicPeriodResponse.builder()
+                            .id(careerAcademicPeriod.getAcademicPeriod().getId())
+                            .name(careerAcademicPeriod.getAcademicPeriod().getName())
+                            .endDate(careerAcademicPeriod.getAcademicPeriod().getEndDate())
+                            .startDate(careerAcademicPeriod.getAcademicPeriod().getStartDate())
+                            .build();
+                }
+        ).toList();
         return CareerResponse.builder()
                 .id(career.getId())
                 .name(career.getName())
+                .academicPeriods(responseList)
                 .build();
     }
 
     public static Career careerFromCareerResponse(CareerResponse careerResponse){
+
         return Career.builder()
                 .id(careerResponse.getId())
                 .name(careerResponse.getName())

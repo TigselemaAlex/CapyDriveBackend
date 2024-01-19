@@ -2,6 +2,8 @@ package org.capisoft.securitybackend.api.models.responses;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,5 +15,6 @@ public class CareerResponse {
     private Long id;
     private String name;
     private FacultyResponse faculty;
+    private List<AcademicPeriodResponse> academicPeriods;
 
 }

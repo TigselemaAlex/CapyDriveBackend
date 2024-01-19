@@ -36,6 +36,9 @@ public class FileController {
         return fileService.getFile(fileId);
     }
 
-
+    @DeleteMapping(value = "/{fileId}")
+    public ResponseEntity<CustomAPIResponse<?>> deleteFile(@PathVariable Long fileId){
+        return fileService.deleteFile(fileId);
+    }
 
 }
