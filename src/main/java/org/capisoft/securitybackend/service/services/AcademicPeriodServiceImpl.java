@@ -6,9 +6,11 @@ import org.capisoft.securitybackend.common.CustomAPIResponse;
 import org.capisoft.securitybackend.common.CustomResponseBuilder;
 import org.capisoft.securitybackend.entities.AcademicPeriod;
 import org.capisoft.securitybackend.entities.Career;
+import org.capisoft.securitybackend.entities.Student;
 import org.capisoft.securitybackend.mappers.AcademicPeriodMapper;
 import org.capisoft.securitybackend.repositories.AcademicPeriodRepository;
 import org.capisoft.securitybackend.repositories.CareerRepository;
+import org.capisoft.securitybackend.repositories.StudentRepository;
 import org.capisoft.securitybackend.service.abstract_services.IAcademicPeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,12 +28,14 @@ public class AcademicPeriodServiceImpl implements IAcademicPeriodService {
 
     private final CustomResponseBuilder responseBuilder;
     private final CareerRepository careerRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
-    public AcademicPeriodServiceImpl(AcademicPeriodRepository academicPeriodRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository) {
+    public AcademicPeriodServiceImpl(AcademicPeriodRepository academicPeriodRepository, CustomResponseBuilder responseBuilder, CareerRepository careerRepository, StudentRepository studentRepository) {
         this.academicPeriodRepository = academicPeriodRepository;
         this.responseBuilder = responseBuilder;
         this.careerRepository = careerRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -77,6 +81,17 @@ public class AcademicPeriodServiceImpl implements IAcademicPeriodService {
         Career career = careerRepository.findById(id).orElseThrow(()-> new RuntimeException("Carrera no encontrada."));
         List<AcademicPeriod> academicPeriodList =
                 academicPeriodRepository.findAllByIdNotIn(career.getCareerAcademicPeriods().stream().map(
+                        careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
+                ).toList());
+        List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de periodos académicos.", academicPeriodResponseList);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> getAllByStudent(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(()-> new RuntimeException("Estudiante no encontrado."));
+        List<AcademicPeriod> academicPeriodList =
+                academicPeriodRepository.findAllByIdNotIn(student.getCareerAcademicPeriods().stream().map(
                         careerAcademicPeriod -> careerAcademicPeriod.getAcademicPeriod().getId()
                 ).toList());
         List<AcademicPeriodResponse> academicPeriodResponseList = academicPeriodList.stream().map(AcademicPeriodMapper::academicPeriodResponseFromAcademicPeriod).toList();
